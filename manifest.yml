@@ -1,0 +1,7 @@
+modules:
+  function:
+    - key: my-function
+      handler: index.run
+app:
+  id: 'ari:cloud:ecosystem::app/bc2208c7-cceb-47d5-94f7-4de52f7f5e83'
+  name: Forge Issue Health
