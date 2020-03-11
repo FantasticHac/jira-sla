@@ -15,7 +15,7 @@ As a TL/PM/Scrum Master, I want to be able to quickly identify the risk of given
 
 **Forge Glance panel**
 
-![Forge Glance panel](docs/imagesforge-glance-panel.png)
+![Forge Glance panel](docs/images/forge-glance-panel.png)
 
 ## Installation
 
