@@ -54,8 +54,8 @@ this example app code with your instances custom field ID before you can access 
 
 1. Use the Jira REST API to get the custom field IDs from an existing issue.
   `https://example.atlassian.net/rest/api/3/issue/<issue-key>?expand=versionedRepresentations`
-1. From the returned JSON find the `customfield_<id>` with your sprint details.
-1. Then in `index.jsx` code replace `customfield_10020` on line 23 with your custom field ID.
+1. From the returned JSON, find the `customfield_<id>` with your sprint details.
+1. Update the `index.jsx` code by replacing `customfield_10020` on line 23 with your custom field ID.
 
 If you have not worked with the Jira REST API, see the [Jira reference docs](https://developer.atlassian.com/cloud/jira/platform/rest/v3/) where you can explore the APIs with Postman.
 
