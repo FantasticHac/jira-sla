@@ -67,17 +67,17 @@ The app's [manifest.yml](./manifest.yml) contains two modules:
 that specifies the metadata displayed to the user using a [Glance](https://developer.atlassian.com/cloud/jira/platform/modules/issue-glance/) in the Jira Issue View.
 
   The `jira:issueGlance` uses the following fields:
-  * title: displayed above glance button
-  * label: displayed on glance button
-  * status: lozenge displaying ">>"
+  * `title` displayed above glance button.
+  * `label` displayed on glance button.
+  * `status` lozenge displaying ">>".
 
 * A corresponding [function module](https://developer.atlassian.com/platform/forge/manifest-reference/#function)
 that implements the issue glance logic.
 
 The function logic is implemented in two files:
 
-* main logic: [src/index.jsx](./src/index.jsx),
-* helpers functions: [src/helpers.js](./src/helpers.js),
+* main logic [src/index.jsx](./src/index.jsx)
+* helpers functions [src/helpers.js](./src/helpers.js)
 
 The app's UI is implemented using these features:
 
