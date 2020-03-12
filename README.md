@@ -10,10 +10,9 @@ sprints had the task been in) so that I can escalate or refine the risky tasks.
 
 ### Issue Glance
 
-This Forge app adds the *issue health management* button using an
+This Forge app adds the *Open Issue Health Management* button using an
 [issue glance](https://developer.atlassian.com/platform/forge/manifest-reference/#jira-issue-glance)
-which is placed alongside fields such as Assignee and Labels. Clicking the button
-opens the content provided by the Forge app, so that it fills the right sidebar.
+which is placed alongside fields such as Assignee and Labels.
 
 ![Issue glance showing a button with text "open issue health management"](docs/images/forge-glance.png)
 
