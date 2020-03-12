@@ -13,7 +13,7 @@ const pluralizeString = num => (num > 1 ? "s" : "");
 export const generateHealthInfoTextContent = sprintIsHealthy =>
   !sprintIsHealthy
     ? "This story seems a little sick 🤒"
-    : "No worries this story is healthy 🎉";
+    : "No worries! This story is healthy 🎉";
 
 export const generateSprintInfoTextContent = issueSprintAge =>
   issueSprintAge
