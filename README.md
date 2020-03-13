@@ -34,11 +34,6 @@ Issue Health is using Jira Software sprint custom field. To have full functional
 * select Custom fields
 * check if **Sprint** *(Jira Software sprint field)* is enabled
 
-**Changing custom field id with Sprint info**
-Each instance of Jira have different id for given custom field. You can use `https://<jira-instance-url>/rest/api/3/issue/<issue-key>?expand=versionedRepresentations` 
-to find `customfield_<id>` with Sprint history info. Then in code replace `customfield_10020` with it.
-
-
 ## Documentation
 
 The app's [manifest.yml](./manifest.yml) contains two modules:
