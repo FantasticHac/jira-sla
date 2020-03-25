@@ -20,7 +20,7 @@ export const generateSprintInfoTextContent = issueSprintAge =>
     ? `🔥🥔   Rolled over from ${issueSprintAge} previous sprint${pluralizeString(
         issueSprintAge
       )}`
-    : "🌊🍒   No rollovers, this sprint is so fresh";
+    : "🌊🍒   No rollovers, this issue is so fresh";
 
 export const generateMovementInfoTextContent = daysFromUpdate =>
   daysFromUpdate > 3

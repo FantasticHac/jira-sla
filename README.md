@@ -4,9 +4,9 @@
 
 ## Description
 
-As a TL/PM/Scrum Master, I want to be able to quickly identify the risk of given
-task based on different stats (eg. how many days the issue was not updated, how many
-sprints had the task been in) so that I can escalate or refine the risky tasks.
+This Forge app provides insight into the health of Jira issues. It uses common indicators
+such as if an issue is a blocker of other issues, number of days an issue has not
+been updated for, or how many sprints a task has been in.
 
 ### Issue Glance
 
@@ -16,10 +16,8 @@ which is placed alongside fields such as Assignee and Labels.
 
 ![Issue glance showing a button with text "open issue health management"](docs/images/forge-glance.png)
 
-### Issue Glance panel
-
 Clicking on the issue glance button opens a panel with the Forge app's UI. Here the
-app can display the details for this issues health.
+app displays the details for this issues health.
 
 ![Glance panel showing a Jira issue with health errors from the Forge app](docs/images/forge-glance-panel.png)
 
@@ -29,35 +27,20 @@ If this is your first time using Forge, the
 [getting started](https://developer.atlassian.com/platform/forge/set-up-forge/)
 guide will help you install the prerequisites.
 
-If you already have a Forge environment setup you can deploy this example straight
-away. Visit our [example apps](https://developer.atlassian.com/platform/forge/example-apps/)
+If you already have a Forge environment set up, you can deploy this example straight
+away. Visit the [example apps](https://developer.atlassian.com/platform/forge/example-apps/)
 page for installation steps.
 
 ## Usage
 
-Issue Health is using Jira Software sprint custom field. To have full functionality
-working it need to be available.
+Issue health uses the Jira Software sprint custom field, if enabled. Without it
+the app will only check for blocker issues and issue age.
 
-The issue health app uses the Jira Software sprint custom field. Without it the
-app will only check for blocker issues and issue age.
-
-To check if Jira Software sprint custom field is enabled:
+To enable the Jira Software sprint custom field:
 
 1. Choose **Jira Settings** > **Issues**.
 1. Select **Fields** > **Custom Fields**.
 1. Ensure the **Sprint** *(Jira Software sprint field)* is enabled.
-
-### Get the custom field ID for your instance
-
-Each instance of Jira has a different id for given custom field. You may need to update
-this example app code with your instances custom field ID before you can access sprint values.
-
-1. Use the Jira REST API to get the custom field IDs from an existing issue.
-  `https://example.atlassian.net/rest/api/3/issue/<issue-key>?expand=versionedRepresentations`
-1. From the returned JSON, find the `customfield_<id>` with your sprint details.
-1. Update the `index.jsx` code by replacing `customfield_10020` on line 23 with your custom field ID.
-
-If you have not worked with the Jira REST API, see the [Jira reference docs](https://developer.atlassian.com/cloud/jira/platform/rest/v3/) where you can explore the APIs with Postman.
 
 ## Documentation
 
@@ -76,8 +59,8 @@ that implements the issue glance logic.
 
 The function logic is implemented in two files:
 
-* main logic [src/index.jsx](./src/index.jsx)
-* helpers functions [src/helpers.js](./src/helpers.js)
+* [src/index.jsx](./src/index.jsx): Contains the main logic and UI elements of the app.
+* [src/helpers.js](./src/helpers.js): Contains helper functions.
 
 The app's UI is implemented using these features:
 

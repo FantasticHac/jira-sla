@@ -2,7 +2,7 @@ modules:
   'jira:issueGlance':
     - key: app.IssueHealth
       function: main
-      title: Issue Health Management
+      title: Issue Health Management 2
       label: Issue Health
       status:
         value:

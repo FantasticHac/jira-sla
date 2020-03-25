@@ -18,16 +18,18 @@ import {
 } from "./helpers";
 
 const App = () => {
-  // custom field with Sprint age data is diffrent on each instance (customfield_10020)
-  const composeGetIssueUrl = issueKey =>
-    `/rest/api/3/issue/${issueKey}?fields=updated,customfield_10020,issuelinks&expand=versionedRepresentations`;
+  const composeGetIssueUrl = (issueKey, sprintCustomFieldKey) =>
+    `/rest/api/3/issue/${issueKey}?fields=updated,${sprintCustomFieldKey},issuelinks&expand=versionedRepresentations`;
 
   const {
     platformContext: { issueKey }
   } = useProductContext();
 
+  const [fieldsData] = useState(getDataFromJira('/rest/api/3/field'))
+  const sprintCustomFieldKey = fieldsData.filter(field => field.name === 'Sprint')[0].key
+
   const [issueData, setIssueData] = useState(
-    getDataFromJira(composeGetIssueUrl(issueKey))
+    getDataFromJira(composeGetIssueUrl(issueKey, sprintCustomFieldKey))
   );
   const [serverData] = useState(getDataFromJira("/rest/api/3/serverInfo"));
 
@@ -35,7 +37,6 @@ const App = () => {
   const {
     versionedRepresentations: {
       updated: { 1: updated },
-      // check custom field with Sprint age!
       customfield_10020: { 2: sprintCustomField },
       issuelinks: { 1: issuelinks }
     }
