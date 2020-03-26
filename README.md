@@ -4,20 +4,19 @@
 
 ## Description
 
-This Forge app provides insight into the health of Jira issues. It uses common indicators
-such as if an issue is a blocker of other issues, number of days an issue has not
-been updated for, or how many sprints a task has been in.
+This Forge app provides insight into the health of Jira issues. The app determines issue health using
+the number of issues blocked, number of days without updates, and how many sprints have contained the
+issue.
 
 ### Issue Glance
 
-This Forge app adds the *Open Issue Health Management* button using an
+The app adds the *Open Issue Health Management* button using an 
 [issue glance](https://developer.atlassian.com/platform/forge/manifest-reference/#jira-issue-glance)
-which is placed alongside fields such as Assignee and Labels.
+which displays alongside fields such as Assignee and Labels.
 
 ![Issue glance showing a button with text "open issue health management"](docs/images/forge-glance.png)
 
-Clicking on the issue glance button opens a panel with the Forge app's UI. Here the
-app displays the details for this issues health.
+Clicking on the issue glance button opens a panel that displays the issue's health using Forge UI.
 
 ![Glance panel showing a Jira issue with health errors from the Forge app](docs/images/forge-glance-panel.png)
 
