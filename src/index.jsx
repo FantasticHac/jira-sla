@@ -37,7 +37,7 @@ const App = () => {
   const {
     versionedRepresentations: {
       updated: { 1: updated },
-      customfield_10020: { 2: sprintCustomField },
+      [sprintCustomFieldKey]: { 2: sprintCustomField },
       issuelinks: { 1: issuelinks }
     }
   } = issueData;
