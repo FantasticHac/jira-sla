@@ -5,16 +5,15 @@
 ## Description
 
 This Forge app provides insight into the health of Jira issues. The app determines issue health using
-the number of issues blocked, number of days without updates, and how many sprints have contained the
-issue.
+the number of unresolverd issues linked, number of days without updates, and how many sprints have contained the issue.
 
 ### Issue Glance
 
-The app adds the *Open Issue Health Management* button using an 
+The app adds the *Open Issue Health Monitor* button using an 
 [issue glance](https://developer.atlassian.com/platform/forge/manifest-reference/#jira-issue-glance)
 which displays alongside fields such as Assignee and Labels.
 
-![Issue glance showing a button with text "open issue health management"](docs/images/forge-glance.png)
+![Issue glance showing a button with text "open issue health monitor"](docs/images/forge-glance.png)
 
 Clicking on the issue glance button opens a panel that displays the issue's health using Forge UI.
 
@@ -62,8 +61,15 @@ The function logic is implemented in two files:
 
 The app's UI is implemented using these features:
 
-- [`Text`](https://developer.atlassian.com/platform/forge/ui-components/text) component.
+- [`IssueGlance`](https://developer.atlassian.com/platform/forge/ui-components/issue-glance) component.
+- [`Avatar`](https://developer.atlassian.com/platform/forge/ui-components/avatar) component.
+- [`AvatarStack`](https://developer.atlassian.com/platform/forge/ui-components/avatar-stack) component.
 - [`Button`](https://developer.atlassian.com/platform/forge/ui-components/button) component.
+- [`Text`](https://developer.atlassian.com/platform/forge/ui-components/text) component.
+- [`ModalDialog`](https://developer.atlassian.com/platform/forge/ui-components/modal-dialog) component.
+- [`Form`](https://developer.atlassian.com/platform/forge/ui-components/form) component.
+- [`Lozenge`](https://developer.atlassian.com/platform/forge/ui-components/lozenge) component.
+- [`Table`](https://developer.atlassian.com/platform/forge/ui-components/table) component.
 - [`useState`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#usestate)
 - [`useProductContext`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#useproductcontext)
 
