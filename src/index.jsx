@@ -83,9 +83,12 @@ const App = () => {
     max([new Date(lastCommentUpdateDate), new Date(statuscategorychangedate)])
   );
 
+  const isIssueHealthy =
+    issueSprintAge < 1 && daysFromLastUpdate < 7 && numberOfUnresolvedLinks < 1;
+
   const numberOfUnhealthyParams = [
     issueSprintAge < 1,
-    daysFromLastUpdate < 3,
+    daysFromLastUpdate < 7,
     numberOfUnresolvedLinks < 1
   ].reduce(
     (accumulator, currentValue) => accumulator + Number(!currentValue),
