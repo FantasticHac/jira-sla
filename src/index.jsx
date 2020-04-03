@@ -36,15 +36,15 @@ const App = () => {
   const {
     platformContext: { issueKey, projectKey }
   } = useProductContext();
-  const [serverData] = useState(getDataFromJira("/rest/api/3/serverInfo"));
-  const [fieldsData] = useState(getDataFromJira("/rest/api/3/field"));
+  const [serverData] = useState(() => getDataFromJira("/rest/api/3/serverInfo"));
+  const [fieldsData] = useState(() => getDataFromJira("/rest/api/3/field"));
   const [modalIsOpen, setModalIsOpen] = useState(false);
- 
+
   const sprintCustomFieldKey =
     fieldsData && fieldsData.filter(field => field.name === "Sprint")[0].key;
 
   const [issueData] = useState(
-    getDataFromJira(composeGetIssueUrl(issueKey, sprintCustomFieldKey))
+    () => getDataFromJira(composeGetIssueUrl(issueKey, sprintCustomFieldKey))
   );
   const {
     versionedRepresentations: {
@@ -72,12 +72,6 @@ const App = () => {
 
   const numberOfUnresolvedLinks = unresolvedLinks.length;
 
-  const isIssueHealthy =
-    issueSprintAge < 1 && daysFromLastUpdate < 7 && numberOfUnresolvedLinks < 1;
-
-  const lastCommentUpdateDate =
-    comments.length > 0 && comments[comments.length - 1].updated;
-
   const daysFromLastUpdate = differenceInDays(
     new Date(),
     max([new Date(lastCommentUpdateDate), new Date(statuscategorychangedate)])
@@ -85,6 +79,9 @@ const App = () => {
 
   const isIssueHealthy =
     issueSprintAge < 1 && daysFromLastUpdate < 7 && numberOfUnresolvedLinks < 1;
+
+  const lastCommentUpdateDate =
+    comments.length > 0 && comments[comments.length - 1].updated;
 
   const numberOfUnhealthyParams = [
     issueSprintAge < 1,
@@ -102,23 +99,8 @@ const App = () => {
   const hideModal = () => setModalIsOpen(false);
   const showModal = () => setModalIsOpen(true);
 
-  return (
+  const renderStatus = () => (
     <Fragment>
-      {modalIsOpen && (
-        <ModalDialog
-          header='Notify assignee about this issue'
-          closeButtonText='Close'
-          onClose={hideModal}>
-          <Form onSubmit={notifyAssignee} submitButtonText='Send'>
-            <TextArea
-              isRequired
-              spellCheck
-              name='notifyBody'
-              defaultValue={DEFAULT_NOTIFY_BODY}
-            />
-          </Form>
-        </ModalDialog>
-      )}
       <Text>
         <Lozenge
           text={`${isIssueHealthy ? "ON" : "OFF"} TRACK`}
@@ -131,22 +113,26 @@ const App = () => {
           numberOfUnhealthyParams
         )}
       />
+    </Fragment>
+  );
 
+  const renderSprint = () => (
+    <Fragment>
       <Text>
         <Lozenge
           text={`${issueSprintAge}`}
           appearance={issueSprintAge > 0 ? "removed" : "inprogress"}
         />{" "}
-        **Sprints Rollover**
+        **Issues carried over**
       </Text>
       {sprintCustomField && oldSprints.length > 0 && (
         <Table>
           <Head>
             <Cell>
-              <Text content='Sprint Name' />
+              <Text content="Sprint name" />
             </Cell>
             <Cell>
-              <Text content='Start Date' />
+              <Text content="Start date" />
             </Cell>
           </Head>
           {oldSprints.map(oldSprint => (
@@ -167,26 +153,30 @@ const App = () => {
           ))}
         </Table>
       )}
+    </Fragment>
+  );
+  const renderLinks = () => (
+    <Fragment>
       <Text>
         <Lozenge
           text={`${numberOfUnresolvedLinks}`}
           appearance={numberOfUnresolvedLinks > 0 ? "removed" : "inprogress"}
         />{" "}
-        {`**Linked Issues ${
+        {`**Linked issues ${
           numberOfUnresolvedLinks > 1 ? "are" : "is"
-        } currently in unresolved state**`}
+        } in unresolved state**`}
       </Text>
       {linkedIssues && linkedIssues.length > 0 && (
         <Table>
           <Head>
             <Cell>
-              <Text content='Issue Key' />
+              <Text content="Issue key" />
             </Cell>
             <Cell>
-              <Text content='Status' />
+              <Text content="Status" />
             </Cell>
             <Cell>
-              <Text content='Owner' />
+              <Text content="Owner" />
             </Cell>
           </Head>
           {linkedIssues.map(
@@ -229,28 +219,30 @@ const App = () => {
           )}
         </Table>
       )}
+    </Fragment>
+  );
+  const renderActivity = () => (
+    <Fragment>
       <Text>
+        **Active in the last 7 days:**
         <Lozenge
-          text={`${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
+          text={` ${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
           appearance={daysFromLastUpdate >= 7 ? "removed" : "inprogress"}
-        />{" "}
-        {`**There has been${
-          daysFromLastUpdate >= 7 ? " no" : ""
-        } activity on this issue in the last 7 days**`}
+        />
       </Text>
       <Table>
         <Head>
           <Cell>
-            <Text content='Activity' />
+            <Text content="Activity" />
           </Cell>
           <Cell>
-            <Text content='Last change' />
+            <Text content="Last change" />
           </Cell>
         </Head>
         {comments.length > 0 && (
           <Row>
             <Cell>
-              <Text content='Comment' />
+              <Text content="Comment" />
             </Cell>
             <Cell>
               <Text
@@ -261,7 +253,7 @@ const App = () => {
         )}
         <Row>
           <Cell>
-            <Text content='Status change' />
+            <Text content="Status change" />
           </Cell>
           <Cell>
             {statuscategorychangedate && (
@@ -275,26 +267,54 @@ const App = () => {
           </Cell>
         </Row>
       </Table>
-      {assignee && (
-        <Table>
-          <Head>
-            <Cell>
-              <Text content='**Assignee**' />
-            </Cell>
-            <Cell>
-              <Text content='' />
-            </Cell>
-          </Head>
-          <Row>
-            <Cell>
-              <Avatar accountId={assignee.accountId} />
-            </Cell>
-            <Cell>
-              <Button text='Notify' onClick={showModal} />
-            </Cell>
-          </Row>
-        </Table>
-      )}
+    </Fragment>
+  );
+  const renderAssignee = () => (
+    <Table>
+      <Head>
+        <Cell>
+          <Text content="**Assignee**" />
+        </Cell>
+        <Cell>
+          <Text content="" />
+        </Cell>
+      </Head>
+      <Row>
+        <Cell>
+          <Avatar accountId={assignee.accountId} />
+        </Cell>
+        <Cell>
+          <Button text="Notify" onClick={showModal} />
+        </Cell>
+      </Row>
+    </Table>
+  );
+  const renderModal = () => (
+    <ModalDialog
+      header="Notify assignee about this issue"
+      closeButtonText="Close"
+      onClose={hideModal}
+    >
+      <Form onSubmit={notifyAssignee} submitButtonText="Send">
+        <TextArea
+          isRequired
+          spellCheck
+          name="notifyBody"
+          defaultValue={DEFAULT_NOTIFY_BODY}
+        />
+      </Form>
+    </ModalDialog>
+  );
+
+  return (
+    <Fragment>
+      {renderStatus()}
+      {renderSprint()}
+      {renderLinks()}
+      {renderActivity()}
+
+      {assignee && renderAssignee()}
+      {modalIsOpen && renderModal()}
     </Fragment>
   );
 };

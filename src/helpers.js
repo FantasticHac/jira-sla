@@ -1,7 +1,8 @@
 import api from "@forge/api";
 import { format } from "date-fns";
 
-export const DEFAULT_NOTIFY_BODY = 'This issue needs your attention! Please report to your team if you have any blockers.'
+export const DEFAULT_NOTIFY_BODY =
+  "This issue needs your attention. Check with your team for any blockers.";
 
 export const getDataFromJira = async url => {
   try {
@@ -25,7 +26,9 @@ export const generateLinkedIssuesData = issueLinks => () => {
 
           return {
             link,
-            assignee: assignee ? assignee.versionedRepresentations.assignee[1] : null
+            assignee: assignee
+              ? assignee.versionedRepresentations.assignee[1]
+              : null
           };
         }
       })
@@ -34,14 +37,15 @@ export const generateLinkedIssuesData = issueLinks => () => {
 };
 
 export const composeGetIssueUrl = (issueKey, sprintCustomFieldKey) =>
-    `/rest/api/3/issue/${issueKey}?fields=${sprintCustomFieldKey},issuelinks,assignee,statuscategorychangedate,comment&expand=versionedRepresentations`;
+  `/rest/api/3/issue/${issueKey}?fields=${sprintCustomFieldKey},issuelinks,assignee,statuscategorychangedate,comment&expand=versionedRepresentations`;
 
 export const composeOldSprintsUrl = (projectKey, oldSprint, baseUrl) =>
-`[${oldSprint.name}](${baseUrl}/secure/RapidBoard.jspa?rapidView=2&projectKey=${projectKey}&view=reporting&chart=sprintRetrospective&sprint=${oldSprint.id})`;
+  `[${oldSprint.name}](${baseUrl}/secure/RapidBoard.jspa?rapidView=2&projectKey=${projectKey}&view=reporting&chart=sprintRetrospective&sprint=${oldSprint.id})`;
 
 export const pluralizeString = num => (num > 1 ? "s" : "");
 
-export const generateOldSprints = sprintCustomField => sprintCustomField
+export const generateOldSprints = sprintCustomField =>
+  sprintCustomField
     ? sprintCustomField.reduce(
         (sprintNames, currentSprint) =>
           currentSprint.state === "closed"
@@ -67,8 +71,8 @@ export const generateHealthInfoTextContent = (
   numberOfUnhealthyParams
 ) =>
   isIssueHealthy
-    ? "Currently all 3 parameters related to this issue indicate that this issue is healthy and on track"
-    : `Currently ${numberOfUnhealthyParams}/3 parameters related to this issue indicate that this issue is in poor health and we determine it is off track `;
+    ? "Healthy and on track"
+    : `**Unhealthy:** ${numberOfUnhealthyParams}/3 health issues`;
 
 export const mapIssueStatusToLozengeAppearance = issueStatus => {
   switch (issueStatus) {
@@ -84,6 +88,26 @@ export const mapIssueStatusToLozengeAppearance = issueStatus => {
 };
 
 export const sendEmailToAssignee = async (issueKey, notifyBody) => {
+  const body = {
+    htmlBody: notifyBody,
+    subject: "Issue Health Monitor",
+    to: {
+      voters: false,
+      watchers: false,
+      groups: [
+        {
+          name: "jira-software-users"
+        }
+      ],
+      reporter: false,
+      assignee: true,
+      users: []
+    },
+    restrict: {
+      permissions: [],
+      groups: []
+    }
+  };
   const response = await api
     .asUser()
     .requestJira(`/rest/api/3/issue/${issueKey}/notify`, {
@@ -92,25 +116,6 @@ export const sendEmailToAssignee = async (issueKey, notifyBody) => {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
-      body: `{
-        "htmlBody": "${notifyBody}",
-        "subject": "Issue Health Monitor",
-        "to": {
-          "voters": false,
-          "watchers": false,
-          "groups": [
-            {
-              "name": "jira-software-users"
-            }
-          ],
-          "reporter": false,
-          "assignee": true,
-          "users": []
-        },
-        "restrict": {
-          "permissions": [],
-          "groups": []
-        }
-      }`
+      body: JSON.stringify(body)
     });
 };

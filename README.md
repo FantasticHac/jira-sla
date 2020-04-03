@@ -5,7 +5,7 @@
 ## Description
 
 This Forge app provides insight into the health of Jira issues. The app determines issue health using
-the number of unresolverd issues linked, number of days without updates, and how many sprints have contained the issue.
+the number of unresolved issues linked, number of days without updates, and how many sprints have contained the issue.
 
 ### Issue Glance
 
@@ -61,15 +61,15 @@ The function logic is implemented in two files:
 
 The app's UI is implemented using these features:
 
-- [`IssueGlance`](https://developer.atlassian.com/platform/forge/ui-components/issue-glance) component.
-- [`Avatar`](https://developer.atlassian.com/platform/forge/ui-components/avatar) component.
-- [`AvatarStack`](https://developer.atlassian.com/platform/forge/ui-components/avatar-stack) component.
-- [`Button`](https://developer.atlassian.com/platform/forge/ui-components/button) component.
-- [`Text`](https://developer.atlassian.com/platform/forge/ui-components/text) component.
-- [`ModalDialog`](https://developer.atlassian.com/platform/forge/ui-components/modal-dialog) component.
-- [`Form`](https://developer.atlassian.com/platform/forge/ui-components/form) component.
-- [`Lozenge`](https://developer.atlassian.com/platform/forge/ui-components/lozenge) component.
-- [`Table`](https://developer.atlassian.com/platform/forge/ui-components/table) component.
+- [`IssueGlance`](https://developer.atlassian.com/platform/forge/ui-components/issue-glance) component
+- [`Avatar`](https://developer.atlassian.com/platform/forge/ui-components/avatar) component
+- [`AvatarStack`](https://developer.atlassian.com/platform/forge/ui-components/avatar-stack) component
+- [`Button`](https://developer.atlassian.com/platform/forge/ui-components/button) component
+- [`Text`](https://developer.atlassian.com/platform/forge/ui-components/text) component
+- [`ModalDialog`](https://developer.atlassian.com/platform/forge/ui-components/modal-dialog) component
+- [`Form`](https://developer.atlassian.com/platform/forge/ui-components/form) component
+- [`Lozenge`](https://developer.atlassian.com/platform/forge/ui-components/lozenge) component
+- [`Table`](https://developer.atlassian.com/platform/forge/ui-components/table) component
 - [`useState`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#usestate)
 - [`useProductContext`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#useproductcontext)
 

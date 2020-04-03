@@ -2,12 +2,12 @@ modules:
   'jira:issueGlance':
     - key: issue-health-monitor
       function: main
-      title: Issue Health Monitor
-      label: Open Monitor
+      title: Issue health monitor
+      label: Open monitor
       status:
         value:
           label: '>>'
-          type: new
+          type: 'new'
         type: lozenge
       description: Monitoring of issue health
   function:
