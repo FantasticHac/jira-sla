@@ -72,6 +72,9 @@ const App = () => {
 
   const numberOfUnresolvedLinks = unresolvedLinks.length;
 
+  const lastCommentUpdateDate =
+  comments.length > 0 && comments[comments.length - 1].updated;
+
   const daysFromLastUpdate = differenceInDays(
     new Date(),
     max([new Date(lastCommentUpdateDate), new Date(statuscategorychangedate)])
@@ -79,9 +82,6 @@ const App = () => {
 
   const isIssueHealthy =
     issueSprintAge < 1 && daysFromLastUpdate < 7 && numberOfUnresolvedLinks < 1;
-
-  const lastCommentUpdateDate =
-    comments.length > 0 && comments[comments.length - 1].updated;
 
   const numberOfUnhealthyParams = [
     issueSprintAge < 1,
@@ -123,9 +123,9 @@ const App = () => {
           text={`${issueSprintAge}`}
           appearance={issueSprintAge > 0 ? "removed" : "inprogress"}
         />{" "}
-        **Issues carried over**
+        {`**Issue${pluralizeString(issueSprintAge)} carried over**`}
       </Text>
-      {sprintCustomField && oldSprints.length > 0 && (
+      {sprintCustomField && oldSprints.length > 0 && serverData && (
         <Table>
           <Head>
             <Cell>
@@ -162,11 +162,11 @@ const App = () => {
           text={`${numberOfUnresolvedLinks}`}
           appearance={numberOfUnresolvedLinks > 0 ? "removed" : "inprogress"}
         />{" "}
-        {`**Linked issues ${
+        {`**Issue${pluralizeString(numberOfUnresolvedLinks)} ${
           numberOfUnresolvedLinks > 1 ? "are" : "is"
-        } in unresolved state**`}
+        } in unresolved status**`}
       </Text>
-      {linkedIssues && linkedIssues.length > 0 && (
+      {linkedIssues && linkedIssues.length > 0 && serverData && (
         <Table>
           <Head>
             <Cell>
@@ -224,9 +224,9 @@ const App = () => {
   const renderActivity = () => (
     <Fragment>
       <Text>
-        **Active in the last 7 days:**
+        **Active in the last 7 days:**{" "}
         <Lozenge
-          text={` ${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
+          text={`${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
           appearance={daysFromLastUpdate >= 7 ? "removed" : "inprogress"}
         />
       </Text>
@@ -312,7 +312,6 @@ const App = () => {
       {renderSprint()}
       {renderLinks()}
       {renderActivity()}
-
       {assignee && renderAssignee()}
       {modalIsOpen && renderModal()}
     </Fragment>
