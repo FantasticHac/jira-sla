@@ -162,9 +162,7 @@ const App = () => {
           text={`${numberOfUnresolvedLinks}`}
           appearance={numberOfUnresolvedLinks > 0 ? "removed" : "inprogress"}
         />{" "}
-        {`**Issue${pluralizeString(numberOfUnresolvedLinks)} ${
-          numberOfUnresolvedLinks > 1 ? "are" : "is"
-        } in unresolved status**`}
+        {`**Issue${pluralizeString(numberOfUnresolvedLinks)} in unresolved status**`}
       </Text>
       {linkedIssues && linkedIssues.length > 0 && serverData && (
         <Table>
