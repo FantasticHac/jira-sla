@@ -1,18 +1,18 @@
 modules:
   'jira:issueGlance':
-    - key: app.IssueHealth
+    - key: issue-health-monitor
       function: main
-      title: Issue Health Management 2
-      label: Issue Health
+      title: Issue health monitor
+      label: Open monitor
       status:
         value:
           label: '>>'
-          type: new
+          type: 'new'
         type: lozenge
-      description: Displaying information about jira issue health after opening Glance
+      description: Monitoring of issue health
   function:
     - key: main
       handler: index.run
 app:
   id: 'ari:cloud:ecosystem::app/7c4b9868-82d4-461e-91cf-691c5f8b3b85'
-  name: Forge Issue Health
+  name: Issue Health Monitor
