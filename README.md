@@ -7,6 +7,20 @@
 This Forge app provides insight into the health of Jira issues. The app determines issue health using
 the number of unresolved issues linked, number of days without updates, and how many sprints have contained the issue.
 
+## Requirements
+
+See [Set up Forge](https://developer.atlassian.com/platform/forge/set-up-forge/) for instructions to get set up.
+
+## Quick start
+
+Once you have logged into the CLI (`forge login`), follow the steps below to install the app onto your site:
+
+1. Clone this repository
+2. Run `forge register` to register a new copy of this app to your developer account
+3. Run `npm install` to install your dependencies
+4. Run `forge deploy` to deploy the app into the default environment
+5. Run `forge install` and follow the prompts to install the app
+
 ### Issue Glance
 
 The app adds the *Open Issue Health Monitor* button using an 
@@ -18,16 +32,6 @@ which displays alongside fields such as Assignee and Labels.
 Clicking on the issue glance button opens a panel that displays the issue's health using Forge UI.
 
 ![Glance panel showing a Jira issue with health errors from the Forge app](docs/images/forge-glance-panel.png)
-
-## Installation
-
-If this is your first time using Forge, the
-[getting started](https://developer.atlassian.com/platform/forge/set-up-forge/)
-guide will help you install the prerequisites.
-
-If you already have a Forge environment set up, you can deploy this example straight
-away. Visit the [example apps](https://developer.atlassian.com/platform/forge/example-apps/)
-page for installation steps.
 
 ## Usage
 
