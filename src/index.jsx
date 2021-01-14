@@ -8,7 +8,7 @@ import ForgeUI, {
   Button,
   Form,
   TextArea,
-  Lozenge,
+  StatusLozenge,
   Table,
   Head,
   Cell,
@@ -102,7 +102,7 @@ const App = () => {
   const renderStatus = () => (
     <Fragment>
       <Text>
-        <Lozenge
+        <StatusLozenge
           text={`${isIssueHealthy ? "ON" : "OFF"} TRACK`}
           appearance={isIssueHealthy ? "success" : "removed"}
         />
@@ -119,7 +119,7 @@ const App = () => {
   const renderSprint = () => (
     <Fragment>
       <Text>
-        <Lozenge
+        <StatusLozenge
           text={`${issueSprintAge}`}
           appearance={issueSprintAge > 0 ? "removed" : "inprogress"}
         />{" "}
@@ -158,7 +158,7 @@ const App = () => {
   const renderLinks = () => (
     <Fragment>
       <Text>
-        <Lozenge
+        <StatusLozenge
           text={`${numberOfUnresolvedLinks}`}
           appearance={numberOfUnresolvedLinks > 0 ? "removed" : "inprogress"}
         />{" "}
@@ -199,7 +199,7 @@ const App = () => {
                 </Cell>
                 <Cell>
                   <Text>
-                    <Lozenge
+                    <StatusLozenge
                       text={statusKey}
                       appearance={mapIssueStatusToLozengeAppearance(statusKey)}
                     />
@@ -223,7 +223,7 @@ const App = () => {
     <Fragment>
       <Text>
         **Active in the last 7 days:**{" "}
-        <Lozenge
+        <StatusLozenge
           text={`${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
           appearance={daysFromLastUpdate >= 7 ? "removed" : "inprogress"}
         />
