@@ -9,7 +9,7 @@ the number of unresolved issues linked, number of days without updates, and how 
 
 ## Requirements
 
-See [Set up Forge](https://developer.atlassian.com/platform/forge/set-up-forge/) for instructions to get set up.
+See [Getting Started](https://developer.atlassian.com/platform/forge/getting-started/) for instructions to get set up.
 
 ## Quick start
 
@@ -83,5 +83,5 @@ Contributions to Issue Health are welcome! Please see [CONTRIBUTING.md](CONTRIBU
 
 ## License
 
-Copyright (c) 2020 Atlassian and others.
+Copyright (c) 2021 Atlassian and others.
 Apache 2.0 licensed, see [LICENSE](LICENSE) file.
