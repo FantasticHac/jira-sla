@@ -97,6 +97,8 @@ The app's UI is implemented using these features:
 - [`useEffect`](https://developer.atlassian.com/platform/forge/ui-kit-hooks-reference/#useeffect)
 - [`useProductContext`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#useproductcontext)
 
+The app uses [storage api](https://developer.atlassian.com/platform/forge/runtime-reference/storage-api/) to store app configuration.
+
 ## Contributions
 
 Contributions to Issue Health are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
