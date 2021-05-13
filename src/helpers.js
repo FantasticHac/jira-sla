@@ -4,6 +4,22 @@ import { format } from "date-fns";
 export const DEFAULT_NOTIFY_BODY =
   "This issue needs your attention. Check with your team for any blockers.";
 
+export const STORAGE_KEY = 'ISSUE_HEALTH_MONITOR_CONFIG';
+
+export const DATE_TIME_OPTIONS = {
+  "default": "yyyy-MM-dd",
+  "day": "dd-MM-yyyy",
+  "month": "MMMM dd, yyyy",
+  "year": "yyyy, dd MMMM",
+};
+
+export const DEFAULT_CONFIGURATION = {
+  timeConfig: DATE_TIME_OPTIONS.default,
+  isAssigneeVisible: true,
+  isNotifyAssigneeButtonVisible: true,
+  isHistoricalAssigneeVisible: false,
+};
+
 export const getDataFromJira = async url => {
   try {
     const response = await api.asUser().requestJira(url);
@@ -39,12 +55,12 @@ export const generateLinkedIssuesData = issueLinks => () => {
 export const composeGetIssueUrl = (issueKey, sprintCustomFieldKey) =>
   `/rest/api/3/issue/${issueKey}?fields=${sprintCustomFieldKey},issuelinks,assignee,statuscategorychangedate,comment&expand=versionedRepresentations`;
 
-export const composeOldSprintsUrl = (projectKey, oldSprint, baseUrl) =>
-  `[${oldSprint.name}](${baseUrl}/secure/RapidBoard.jspa?rapidView=2&projectKey=${projectKey}&view=reporting&chart=sprintRetrospective&sprint=${oldSprint.id})`;
+export const composeOldSprintsUrl = (projectKey, sprintId, baseUrl) =>
+  `${baseUrl}/secure/RapidBoard.jspa?rapidView=2&projectKey=${projectKey}&view=reporting&chart=sprintRetrospective&sprint=${sprintId}`;
 
 export const pluralizeString = num => (num > 1 ? "s" : "");
 
-export const generateOldSprints = sprintCustomField =>
+export const generateOldSprints = (sprintCustomField, timeConfig) =>
   sprintCustomField
     ? sprintCustomField.reduce(
         (sprintNames, currentSprint) =>
@@ -53,10 +69,7 @@ export const generateOldSprints = sprintCustomField =>
                 ...sprintNames,
                 {
                   name: currentSprint.name,
-                  startDate: format(
-                    new Date(currentSprint.startDate),
-                    "yyyy-MM-dd"
-                  ),
+                  startDate: format(new Date(currentSprint.startDate), timeConfig),
                   boardId: currentSprint.boardId,
                   id: currentSprint.id
                 }
@@ -65,14 +78,6 @@ export const generateOldSprints = sprintCustomField =>
         []
       )
     : [];
-
-export const generateHealthInfoTextContent = (
-  isIssueHealthy,
-  numberOfUnhealthyParams
-) =>
-  isIssueHealthy
-    ? "Healthy and on track"
-    : `**Unhealthy:** ${numberOfUnhealthyParams}/3 health issues`;
 
 export const mapIssueStatusToLozengeAppearance = issueStatus => {
   switch (issueStatus) {
@@ -118,4 +123,23 @@ export const sendEmailToAssignee = async (issueKey, notifyBody) => {
       },
       body: JSON.stringify(body)
     });
+};
+
+const issueChangelogTransformer = (response) => {
+  if (!response) return []
+  const filteredResponse = response.values.filter(value => value.items.some(item => item.fieldId === 'assignee'));
+  return filteredResponse.length !== 0
+      ? filteredResponse
+          .map(changelogItem => (
+          {
+            ...changelogItem,
+            items: changelogItem.items.find(item => item.fieldId === 'assignee')
+          }))
+          .reverse()
+      : [];
+};
+
+export const getIssueChangelog = async (issueKey) => {
+  const response = await getDataFromJira(`/rest/api/3/issue/${issueKey}/changelog`);
+  return issueChangelogTransformer(response);
 };
