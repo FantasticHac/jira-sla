@@ -12,13 +12,12 @@ modules:
       description: Monitoring of issue health
   'jira:adminPage':
     - key: issue-health-monitor-config-page
-      function: main2
+      function: config
       title: Issue health configuration
-      description: Monitoring of issue health
   function:
     - key: main
       handler: index.run
-    - key: main2
+    - key: config
       handler: config.run
 app:
   id: ari:cloud:ecosystem::app/6f4bfd54-24a8-4a4b-8fa0-f0b215d87a93

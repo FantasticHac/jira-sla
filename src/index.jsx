@@ -119,11 +119,9 @@ const App = () => {
       {
         isIssueHealthy
             ? <Text content="Healthy and on track"/>
-            : <Fragment>
-              <Text>
+            : <Text>
                 <Strong>Unhealthy: </Strong>{numberOfUnhealthyParams}/3 health issues
               </Text>
-            </Fragment>
       }
 
     </Fragment>
