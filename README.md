@@ -74,11 +74,12 @@ that specifies the metadata displayed to the user using an [Admin page](https://
 1. A corresponding [function module](https://developer.atlassian.com/platform/forge/manifest-reference/#function)
 that implements the issue glance and admin page logic.
 
-The function logic is implemented in two files:
+The function logic is implemented in four files:
 
 * [src/index.jsx](./src/index.jsx): Contains the main logic and UI elements of the app.
 * [src/config.jsx](./src/config.jsx): Contains configuration logic and UI elements of configuration page.
 * [src/helpers.js](./src/helpers.js): Contains helper functions.
+* [src/constants.js](./src/constants.js): Contains set of constants.
 
 The app's UI is implemented using these features:
 

@@ -11,7 +11,7 @@ import ForgeUI, {
     SectionMessage,
 } from '@forge/ui';
 import { format } from "date-fns";
-import { DATE_TIME_OPTIONS, DEFAULT_CONFIGURATION, STORAGE_KEY } from './helpers';
+import { DATE_TIME_OPTIONS, DEFAULT_CONFIGURATION, STORAGE_KEY } from './constants';
 
 
 import { storage } from '@forge/api';
@@ -48,7 +48,7 @@ const App = () => {
                 label = `Month day, year: ${format(sampleDate, DATE_TIME_OPTIONS.month)}`;
                 break;
             case DATE_TIME_OPTIONS.year:
-                label = `Month day, year: ${format(sampleDate, DATE_TIME_OPTIONS.year)}`;
+                label = `Year, month day: ${format(sampleDate, DATE_TIME_OPTIONS.year)}`;
                 break;
             default:
                 label = `Year-month-day: ${format(sampleDate, DATE_TIME_OPTIONS.default)}`;

@@ -23,9 +23,6 @@ import { storage } from '@forge/api';
 import { differenceInDays, format, max } from "date-fns";
 
 import {
-  DEFAULT_NOTIFY_BODY,
-  DEFAULT_CONFIGURATION,
-  STORAGE_KEY,
   getDataFromJira,
   generateLinkedIssuesData,
   composeGetIssueUrl,
@@ -36,6 +33,8 @@ import {
   mapIssueStatusToLozengeAppearance,
   getIssueChangelog,
 } from "./helpers";
+
+import { DEFAULT_NOTIFY_BODY, DEFAULT_CONFIGURATION, STORAGE_KEY } from './constants';
 
 
 
