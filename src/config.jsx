@@ -27,8 +27,7 @@ const App = () => {
 
     const onSubmit = async (formData) => {
         await storage.set(STORAGE_KEY, formData);
-        const storageData = await storage.get(STORAGE_KEY);
-        setFormState(storageData);
+        setFormState(formData);
         setFormSubmitted(true);
     };
 
