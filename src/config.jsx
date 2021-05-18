@@ -6,34 +6,43 @@ import ForgeUI, {
     Select,
     Option,
     Toggle,
+    Text,
+    Strong,
     useState,
     useEffect,
-    SectionMessage,
+    SectionMessage, useProductContext,
 } from '@forge/ui';
 import { format } from "date-fns";
-import { DATE_TIME_OPTIONS, DEFAULT_CONFIGURATION, STORAGE_KEY } from './constants';
+import { DATE_TIME_OPTIONS, DEFAULT_CONFIGURATION, STORAGE_KEY_PREFIX } from './constants';
 
 
 import { storage } from '@forge/api';
+import { getProjects } from "./helpers";
 
 const App = () => {
-    const [formState, setFormState] = useState(undefined);
-    const [isFormSubmitted, setFormSubmitted] = useState(false);
+    const [projectConfigState, setProjectConfigState] = useState(undefined);
+    const [isProjectConfigSubmitted, setProjectConfigSubmitted] = useState(false);
+    const [projectKey, setProjectKey] = useState(undefined);
+    const [projectData] = useState(() => getProjects());
 
     useEffect(async () => {
-        const storageData = await storage.get(STORAGE_KEY);
-        setFormState(storageData || DEFAULT_CONFIGURATION);
-    }, []);
+        const storageData = await storage.get(`${STORAGE_KEY_PREFIX}_${projectKey}`);
+        setProjectConfigState(storageData || DEFAULT_CONFIGURATION);
+    }, [projectKey]);
 
-    const onSubmit = async (formData) => {
-        await storage.set(STORAGE_KEY, formData);
-        setFormState(formData);
-        setFormSubmitted(true);
+    const onProjectPicked = ({ project }) => {
+        setProjectKey(project);
+    }
+
+    const onProjectConfigSubmit = async (projectConfig) => {
+        await storage.set(`${STORAGE_KEY_PREFIX}_${projectKey}`, projectConfig);
+        setProjectConfigState(projectConfig);
+        setProjectConfigSubmitted(true);
     };
 
-    const isDateOptionSelected = (value) => formState && formState.timeConfig && formState.timeConfig === value && { defaultSelected: true };
+    const isDateOptionSelected = (value) => projectConfigState && projectConfigState.timeConfig && projectConfigState.timeConfig === value && { defaultSelected: true };
 
-    const isToggleConfigSelected = (name) => formState && formState[name] && { defaultChecked: true }
+    const isToggleConfigSelected = (name) => projectConfigState && projectConfigState[name] && { defaultChecked: true }
 
     const renderDateTimeOption = (option) => {
         let label;
@@ -56,6 +65,19 @@ const App = () => {
         return <Option label={label} value={option} {...isDateOptionSelected(option)} />
     }
 
+    const renderProjectPicker = () => {
+        return projectData.length !== 0
+            ? <Fragment>
+                <Text>In this page you can modify <Strong>Issue health monitor</Strong> configuration for selected project</Text>
+                <Form onSubmit={onProjectPicked} submitButtonText="Choose">
+                    <Select label="Choose project" name="project" >
+                        {projectData.map(project => <Option label={project.name} value={project.key} />)}
+                    </Select>
+                </Form>
+            </Fragment>
+            : <Text content="No configurable projects available" />
+    }
+
     const renderDateTimeConfig = () => (
         <Select label="Date time configuration" name="timeConfig">
             {Object.values(DATE_TIME_OPTIONS).map(option => renderDateTimeOption(option))}
@@ -76,13 +98,13 @@ const App = () => {
 
     return (
         <Fragment>
-            {isFormSubmitted && <SectionMessage title="Configuration Saved" appearance="confirmation"/>}
-            <Form onSubmit={onSubmit}>
+            {isProjectConfigSubmitted && <SectionMessage title="Configuration Saved" appearance="confirmation"/>}
+            {!projectKey ? renderProjectPicker() : <Form onSubmit={onProjectConfigSubmit}>
                 {renderDateTimeConfig()}
                 {renderAssigneeConfig()}
                 {renderNotificationButtonConfig()}
                 {renderHistoricalAssigneeConfig()}
-            </Form>
+            </Form>}
         </Fragment>
     );
 };

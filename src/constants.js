@@ -1,7 +1,7 @@
 export const DEFAULT_NOTIFY_BODY =
     "This issue needs your attention. Check with your team for any blockers.";
 
-export const STORAGE_KEY = 'ISSUE_HEALTH_MONITOR_CONFIG';
+export const STORAGE_KEY_PREFIX = 'ISSUE_HEALTH_MONITOR_CONFIG';
 
 export const DATE_TIME_OPTIONS = {
     "default": "yyyy-MM-dd",

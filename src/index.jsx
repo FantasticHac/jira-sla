@@ -34,7 +34,7 @@ import {
   getIssueChangelog,
 } from "./helpers";
 
-import { DEFAULT_NOTIFY_BODY, DEFAULT_CONFIGURATION, STORAGE_KEY } from './constants';
+import { DEFAULT_NOTIFY_BODY, DEFAULT_CONFIGURATION, STORAGE_KEY_PREFIX } from './constants';
 
 
 
@@ -44,7 +44,7 @@ const App = () => {
   } = useProductContext();
   const [serverData] = useState(() => getDataFromJira("/rest/api/3/serverInfo"));
   const [fieldsData] = useState(() => getDataFromJira("/rest/api/3/field"));
-  const [storageData] = useState(async () => await storage.get(STORAGE_KEY) || DEFAULT_CONFIGURATION);
+  const [storageData] = useState(async () => await storage.get(`${STORAGE_KEY_PREFIX}_${projectKey}`) || DEFAULT_CONFIGURATION);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [historicalAssignees] = useState((storageData.isHistoricalAssigneeVisible && getIssueChangelog(issueKey)))
 

@@ -11,9 +11,9 @@ modules:
         type: lozenge
       description: Monitoring of issue health
   'jira:adminPage':
-    - key: issue-health-monitor-config-page
+    - key: issue-health-monitor-admin-page
       function: config
-      title: Issue health configuration
+      title: Issue health monitor configuration
   function:
     - key: main
       handler: index.run

@@ -33,6 +33,8 @@ Clicking on the issue glance button opens a panel that displays the issue's heal
 
 ![Glance panel showing a Jira issue with health errors from the Forge app](docs/images/forge-glance-panel.png)
 
+### Admin Page
+
 The app also adds configuration using [admin page](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page).
 
 ![Apps sidebar showing an navigation item with text "issue health configutarion"](docs/images/forge-configuration.png)
@@ -40,9 +42,6 @@ The app also adds configuration using [admin page](https://developer.atlassian.c
 Clicking on the navigation item opens admin page that displays app configuration.
 
 ![Admin page showing app configuration](docs/images/forge-configuration-admin-page.png)
-
-
-### Admin Page
 
 
 ## Usage

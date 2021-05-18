@@ -124,3 +124,13 @@ export const getIssueChangelog = async (issueKey) => {
   const response = await getDataFromJira(`/rest/api/3/issue/${issueKey}/changelog`);
   return issueChangelogTransformer(response);
 };
+
+const projectsTransformer = (response) => {
+    if (!response) return []
+    return response.values.map(({key, name}) => ({key, name}))
+}
+
+export const getProjects = async () => {
+    const response = await getDataFromJira("/rest/api/3/project/search");
+    return projectsTransformer(response);
+}
