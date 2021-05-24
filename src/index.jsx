@@ -15,22 +15,28 @@ import ForgeUI, {
   Row,
   useState,
   useProductContext,
-  Fragment
+  Fragment,
+  Strong,
+  Link
 } from "@forge/ui";
+import { storage } from '@forge/api';
 import { differenceInDays, format, max } from "date-fns";
 
 import {
-  DEFAULT_NOTIFY_BODY,
   getDataFromJira,
   generateLinkedIssuesData,
   composeGetIssueUrl,
   composeOldSprintsUrl,
   pluralizeString,
   generateOldSprints,
-  generateHealthInfoTextContent,
   sendEmailToAssignee,
-  mapIssueStatusToLozengeAppearance
+  mapIssueStatusToLozengeAppearance,
+  getIssueChangelog,
 } from "./helpers";
+
+import { DEFAULT_NOTIFY_BODY, DEFAULT_CONFIGURATION, STORAGE_KEY_PREFIX } from './constants';
+
+
 
 const App = () => {
   const {
@@ -38,7 +44,9 @@ const App = () => {
   } = useProductContext();
   const [serverData] = useState(() => getDataFromJira("/rest/api/3/serverInfo"));
   const [fieldsData] = useState(() => getDataFromJira("/rest/api/3/field"));
+  const [storageData] = useState(async () => await storage.get(`${STORAGE_KEY_PREFIX}_${projectKey}`) || DEFAULT_CONFIGURATION);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [historicalAssignees] = useState((storageData.isHistoricalAssigneeVisible && getIssueChangelog(issueKey)))
 
   const sprintCustomFieldKey =
     fieldsData && fieldsData.filter(field => field.name === "Sprint")[0].key;
@@ -61,7 +69,7 @@ const App = () => {
   const [linkedIssues] = useState(generateLinkedIssuesData(issuelinks));
 
   // need to have Jira Software sprint field to access sprint data
-  const oldSprints = generateOldSprints(sprintCustomField);
+  const oldSprints = generateOldSprints(sprintCustomField, storageData.timeConfig);
 
   const issueSprintAge = oldSprints.length;
 
@@ -107,12 +115,14 @@ const App = () => {
           appearance={isIssueHealthy ? "success" : "removed"}
         />
       </Text>
-      <Text
-        content={generateHealthInfoTextContent(
-          isIssueHealthy,
-          numberOfUnhealthyParams
-        )}
-      />
+      {
+        isIssueHealthy
+            ? <Text content="Healthy and on track"/>
+            : <Text>
+                <Strong>Unhealthy: </Strong>{numberOfUnhealthyParams}/3 health issues
+              </Text>
+      }
+
     </Fragment>
   );
 
@@ -122,8 +132,9 @@ const App = () => {
         <StatusLozenge
           text={`${issueSprintAge}`}
           appearance={issueSprintAge > 0 ? "removed" : "inprogress"}
-        />{" "}
-        {`**Issue${pluralizeString(issueSprintAge)} carried over**`}
+        />
+        {" "}
+        <Strong>Issue{pluralizeString(issueSprintAge)} carried over</Strong>
       </Text>
       {sprintCustomField && oldSprints.length > 0 && serverData && (
         <Table>
@@ -138,13 +149,9 @@ const App = () => {
           {oldSprints.map(oldSprint => (
             <Row>
               <Cell>
-                <Text
-                  content={composeOldSprintsUrl(
-                    projectKey,
-                    oldSprint,
-                    serverData.baseUrl
-                  )}
-                />
+                <Text>
+                  <Link href={composeOldSprintsUrl(projectKey, oldSprint.id, serverData.baseUrl)}>{oldSprint.name}</Link>
+                </Text>
               </Cell>
               <Cell>
                 <Text content={oldSprint.startDate} />
@@ -162,7 +169,7 @@ const App = () => {
           text={`${numberOfUnresolvedLinks}`}
           appearance={numberOfUnresolvedLinks > 0 ? "removed" : "inprogress"}
         />{" "}
-        {`**Issue${pluralizeString(numberOfUnresolvedLinks)} in unresolved status**`}
+        <Strong>Issue{pluralizeString(numberOfUnresolvedLinks)} in unresolved status</Strong>
       </Text>
       {linkedIssues && linkedIssues.length > 0 && serverData && (
         <Table>
@@ -193,9 +200,9 @@ const App = () => {
             }) => (
               <Row>
                 <Cell>
-                  <Text
-                    content={`[${linkedIssueKey}](${serverData.baseUrl}/browse/${linkedIssueKey})`}
-                  />
+                  <Text>
+                    <Link href={`${serverData.baseUrl}/browse/${linkedIssueKey}`}>{linkedIssueKey}</Link>
+                  </Text>
                 </Cell>
                 <Cell>
                   <Text>
@@ -222,7 +229,8 @@ const App = () => {
   const renderActivity = () => (
     <Fragment>
       <Text>
-        **Active in the last 7 days:**{" "}
+        <Strong>Active in the last 7 days:</Strong>
+        {" "}
         <StatusLozenge
           text={`${daysFromLastUpdate >= 7 ? "NO" : "YES"}`}
           appearance={daysFromLastUpdate >= 7 ? "removed" : "inprogress"}
@@ -243,9 +251,7 @@ const App = () => {
               <Text content="Comment" />
             </Cell>
             <Cell>
-              <Text
-                content={format(new Date(lastCommentUpdateDate), "yyyy-MM-dd")}
-              />
+              <Text content={format(new Date(lastCommentUpdateDate), storageData.timeConfig)} />
             </Cell>
           </Row>
         )}
@@ -255,12 +261,7 @@ const App = () => {
           </Cell>
           <Cell>
             {statuscategorychangedate && (
-              <Text
-                content={format(
-                  new Date(statuscategorychangedate),
-                  "yyyy-MM-dd"
-                )}
-              />
+              <Text content={format(new Date(statuscategorychangedate), storageData.timeConfig)} />
             )}
           </Cell>
         </Row>
@@ -271,19 +272,20 @@ const App = () => {
     <Table>
       <Head>
         <Cell>
-          <Text content="**Assignee**" />
-        </Cell>
-        <Cell>
-          <Text content="" />
+          <Text>
+            <Strong>Assignee</Strong>
+          </Text>
         </Cell>
       </Head>
       <Row>
         <Cell>
           <Avatar accountId={assignee.accountId} />
         </Cell>
-        <Cell>
-          <Button text="Notify" onClick={showModal} />
-        </Cell>
+        { storageData && storageData.isNotifyAssigneeButtonVisible && (
+          <Cell>
+            <Button text="Notify" onClick={showModal} />
+          </Cell>
+        )}
       </Row>
     </Table>
   );
@@ -304,14 +306,45 @@ const App = () => {
     </ModalDialog>
   );
 
+  const renderHistoricalAssignees = () => (
+    <Table>
+      <Head>
+        <Cell>
+          <Text>
+            <Strong>Historical Assignee</Strong>
+          </Text>
+        </Cell>
+      </Head>
+      {
+        historicalAssignees.map(({items: { tmpToAccountId }, created}) => (
+
+            <Row>
+              <Cell>
+                {
+                  tmpToAccountId
+                      ? <Avatar accountId={tmpToAccountId}/>
+                      : <Text content="Unassinged issue" />
+                }
+              </Cell>
+              <Cell>
+                <Text content={format(new Date(created), storageData.timeConfig)} />
+              </Cell>
+            </Row>
+        ))
+      }
+
+    </Table>
+  )
+
   return (
     <Fragment>
       {renderStatus()}
       {renderSprint()}
       {renderLinks()}
       {renderActivity()}
-      {assignee && renderAssignee()}
+      {storageData.isAssigneeVisible && assignee && renderAssignee()}
       {modalIsOpen && renderModal()}
+      {historicalAssignees && historicalAssignees.length !== 0 && renderHistoricalAssignees()}
     </Fragment>
   );
 };
