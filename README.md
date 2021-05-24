@@ -35,11 +35,11 @@ Clicking on the issue glance button opens a panel that displays the issue's heal
 
 ### Admin Page
 
-The app also adds configuration using [admin page](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page).
+The app also adds configuration using an [admin page](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page).
 
 ![Apps sidebar showing an navigation item with text "issue health configutarion"](docs/images/forge-configuration.png)
 
-Clicking on the navigation item opens admin page that displays app configuration.
+Clicking on the navigation item opens the admin page that displays the app configuration.
 
 ![Admin page showing app configuration](docs/images/forge-configuration-admin-page.png)
 
@@ -60,15 +60,16 @@ To enable the Jira Software sprint custom field:
 The app's [manifest.yml](./manifest.yml) contains two modules:
 
 1. A [jira:issueGlance module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-issue-glance)
-that specifies the metadata displayed to the user using a [Glance](https://developer.atlassian.com/cloud/jira/platform/modules/issue-glance/) in the Jira Issue View. The `jira:issueGlance` uses the following fields:
+that specifies the metadata displayed to the user using a [Glance](https://developer.atlassian.com/cloud/jira/platform/modules/issue-glance/) 
+   in the Jira Issue View. The `jira:issueGlance` uses the following fields:
   
     * `title` displayed above glance button.
     * `label` displayed on glance button.
     * `status` lozenge displaying ">>".
    
 1. A [jira:adminPage module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page) 
-that specifies the metadata displayed to the user using an [Admin page](https://developer.atlassian.com/cloud/jira/platform/modules/admin-page/) in the Jira Apps panel. The `jira:adminPage` uses the following field:
-   * `title` displayed in navigation panel.
+that specifies the metadata displayed to the user using an [Admin page](https://developer.atlassian.com/cloud/jira/platform/modules/admin-page/) 
+   in the Jira apps panel. The `jira:adminPage` uses the `title` value when displayed in navigation panel.
 
 1. A corresponding [function module](https://developer.atlassian.com/platform/forge/manifest-reference/#function)
 that implements the issue glance and admin page logic.
@@ -96,7 +97,7 @@ The app's UI is implemented using these features:
 - [`useEffect`](https://developer.atlassian.com/platform/forge/ui-kit-hooks-reference/#useeffect)
 - [`useProductContext`](https://developer.atlassian.com/platform/forge/ui-hooks-reference/#useproductcontext)
 
-The app uses [storage api](https://developer.atlassian.com/platform/forge/runtime-reference/storage-api/) to store app configuration.
+The app uses the [storage api](https://developer.atlassian.com/platform/forge/runtime-reference/storage-api/) to store app configuration.
 
 ## Contributions
 
