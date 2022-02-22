@@ -13,8 +13,8 @@
     "eslint-plugin-react-hooks": "^2.1.2"
   },
   "dependencies": {
-    "@forge/api": "^1.1.0",
-    "@forge/ui": "^0.13.0",
+    "@forge/api": "^2.6.0",
+    "@forge/ui": "^1.0.0",
     "date-fns": "^2.8.1"
   }
 }

@@ -24,7 +24,7 @@ Once you have logged into the CLI (`forge login`), follow the steps below to ins
 ### Issue Glance
 
 The app adds the *Open Issue Health Monitor* button using an 
-[issue glance](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-issue-glance)
+[issue glance](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-issue-glance)
 which displays alongside fields such as Assignee and Labels.
 
 ![Issue glance showing a button with text "open issue health monitor"](docs/images/forge-glance.png)
@@ -35,7 +35,7 @@ Clicking on the issue glance button opens a panel that displays the issue's heal
 
 ### Admin Page
 
-The app also adds configuration using an [admin page](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page).
+The app also adds configuration using an [admin page](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-admin-page).
 
 ![Apps sidebar showing an navigation item with text "issue health configutarion"](docs/images/forge-configuration.png)
 
@@ -59,7 +59,7 @@ To enable the Jira Software sprint custom field:
 
 The app's [manifest.yml](./manifest.yml) contains two modules:
 
-1. A [jira:issueGlance module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-issue-glance)
+1. A [jira:issueGlance module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-issue-glance)
 that specifies the metadata displayed to the user using a [Glance](https://developer.atlassian.com/cloud/jira/platform/modules/issue-glance/) 
    in the Jira Issue View. The `jira:issueGlance` uses the following fields:
   
@@ -67,11 +67,11 @@ that specifies the metadata displayed to the user using a [Glance](https://devel
     * `label` displayed on glance button.
     * `status` lozenge displaying ">>".
    
-1. A [jira:adminPage module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/#jira-admin-page) 
+1. A [jira:adminPage module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-admin-page) 
 that specifies the metadata displayed to the user using an [Admin page](https://developer.atlassian.com/cloud/jira/platform/modules/admin-page/) 
    in the Jira apps panel. The `jira:adminPage` uses the `title` value when displayed in navigation panel.
 
-1. A corresponding [function module](https://developer.atlassian.com/platform/forge/manifest-reference/#function)
+1. A corresponding [function module](https://developer.atlassian.com/platform/forge/manifest-reference/modules/function/)
 that implements the issue glance and admin page logic.
 
 The function logic is implemented in four files:
