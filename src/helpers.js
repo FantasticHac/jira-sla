@@ -1,7 +1,7 @@
 import api, { route } from "@forge/api";
 import { format } from "date-fns";
 
-import { requiredIssueFields } from './constants';
+import { REQUIRED_ISSUE_FIELDS } from './constants';
 
 export const getDataFromJira = async url => {
   try {
@@ -141,7 +141,7 @@ export const getProjects = async () => {
 export const transformIssueData = (issueData) => {
     const { fields } = issueData;
   
-    const transformedIssueData = requiredIssueFields.reduce((issueFieldsMap, field) => {
+    const transformedIssueData = REQUIRED_ISSUE_FIELDS.reduce((issueFieldsMap, field) => {
       issueFieldsMap[field] = fields[field];
       return issueFieldsMap;
     } , {});

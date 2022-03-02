@@ -23,6 +23,26 @@ app:
   id: ari:cloud:ecosystem::app/2578b3d0-f830-47cb-a952-54b498a8dc4c
 permissions:
   scopes:
-    - write:jira-work
-    - read:jira-work
     - storage:app
+    - send:notification:jira
+    - read:issue-meta:jira
+    - read:avatar:jira
+    - read:issue.changelog:jira
+    - read:issue-type:jira
+    - read:project:jira
+    - read:project.property:jira
+    - read:user:jira
+    - read:application-role:jira
+    - read:avatar:jira
+    - read:group:jira
+    - read:issue-type-hierarchy:jira
+    - read:project-category:jira
+    - read:project-version:jira
+    - read:project.component:jira
+    - read:issue-security-level:jira
+    - read:issue.vote:jira
+    - read:issue:jira
+    - read:status:jira
+    - read:field-configuration:jira
+    - read:field:jira
+

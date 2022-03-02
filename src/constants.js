@@ -17,4 +17,4 @@ export const DEFAULT_CONFIGURATION = {
     isHistoricalAssigneeVisible: false,
 };
 
-export const requiredIssueFields = ['statuscategorychangedate', 'customfield_10020', 'comment', 'issuelinks', 'assignee']; 
+export const REQUIRED_ISSUE_FIELDS = ['statuscategorychangedate', 'customfield_10020', 'comment', 'issuelinks', 'assignee']; 
