@@ -1,10 +1,13 @@
-import api from "@forge/api";
+import api, { route } from "@forge/api";
 import { format } from "date-fns";
+
+import { REQUIRED_ISSUE_FIELDS } from './constants';
 
 export const getDataFromJira = async url => {
   try {
-    const response = await api.asUser().requestJira(url);
-    return await response.json();
+    const response = await api.asUser().requestJira(route`${url}`);
+    const result = await response.json();
+    return result;
   } catch (error) {
     console.log("getDataFromJira error: ", error);
     throw error;
@@ -18,7 +21,7 @@ export const generateLinkedIssuesData = issueLinks => () => {
       .map(async link => {
         if (link.inwardIssue) {
           const assignee = await getDataFromJira(
-            `/rest/api/3/issue/${link.inwardIssue.key}?fields=assignee&expand=versionedRepresentations`
+            route`/rest/api/3/issue/${link.inwardIssue.key}?fields=assignee&expand=versionedRepresentations`
           );
 
           return {
@@ -96,7 +99,7 @@ export const sendEmailToAssignee = async (issueKey, notifyBody) => {
   };
   const response = await api
     .asUser()
-    .requestJira(`/rest/api/3/issue/${issueKey}/notify`, {
+    .requestJira(route`/rest/api/3/issue/${issueKey}/notify`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -121,7 +124,7 @@ const issueChangelogTransformer = (response) => {
 };
 
 export const getIssueChangelog = async (issueKey) => {
-  const response = await getDataFromJira(`/rest/api/3/issue/${issueKey}/changelog`);
+  const response = await getDataFromJira(route`/rest/api/3/issue/${issueKey}/changelog`);
   return issueChangelogTransformer(response);
 };
 
@@ -131,6 +134,17 @@ const projectsTransformer = (response) => {
 }
 
 export const getProjects = async () => {
-    const response = await getDataFromJira("/rest/api/3/project/search");
+    const response = await getDataFromJira(route`/rest/api/3/project/search`);
     return projectsTransformer(response);
+}
+
+export const transformIssueData = (issueData) => {
+    const { fields } = issueData;
+  
+    const transformedIssueData = REQUIRED_ISSUE_FIELDS.reduce((issueFieldsMap, field) => {
+      issueFieldsMap[field] = fields[field];
+      return issueFieldsMap;
+    } , {});
+
+    return transformedIssueData;
 }

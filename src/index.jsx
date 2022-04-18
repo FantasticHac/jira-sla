@@ -1,8 +1,6 @@
 import ForgeUI, {
   render,
   IssueGlance,
-  Avatar,
-  AvatarStack,
   ModalDialog,
   Text,
   Button,
@@ -17,7 +15,9 @@ import ForgeUI, {
   useProductContext,
   Fragment,
   Strong,
-  Link
+  Link,
+  User,
+  UserGroup
 } from "@forge/ui";
 import { storage } from '@forge/api';
 import { differenceInDays, format, max } from "date-fns";
@@ -32,6 +32,7 @@ import {
   sendEmailToAssignee,
   mapIssueStatusToLozengeAppearance,
   getIssueChangelog,
+  transformIssueData,
 } from "./helpers";
 
 import { DEFAULT_NOTIFY_BODY, DEFAULT_CONFIGURATION, STORAGE_KEY_PREFIX } from './constants';
@@ -42,8 +43,8 @@ const App = () => {
   const {
     platformContext: { issueKey, projectKey }
   } = useProductContext();
-  const [serverData] = useState(() => getDataFromJira("/rest/api/3/serverInfo"));
-  const [fieldsData] = useState(() => getDataFromJira("/rest/api/3/field"));
+  const [serverData] = useState(() => getDataFromJira(`/rest/api/3/serverInfo`));
+  const [fieldsData] = useState(() => getDataFromJira(`/rest/api/3/field`));
   const [storageData] = useState(async () => await storage.get(`${STORAGE_KEY_PREFIX}_${projectKey}`) || DEFAULT_CONFIGURATION);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [historicalAssignees] = useState((storageData.isHistoricalAssigneeVisible && getIssueChangelog(issueKey)))
@@ -54,17 +55,17 @@ const App = () => {
   const [issueData] = useState(
     () => getDataFromJira(composeGetIssueUrl(issueKey, sprintCustomFieldKey))
   );
+
+  const transformedIssueData = transformIssueData(issueData);
   const {
-    versionedRepresentations: {
-      [sprintCustomFieldKey]: { 2: sprintCustomField },
-      issuelinks: { 1: issuelinks },
-      assignee: { 1: assignee },
-      statuscategorychangedate: { 1: statuscategorychangedate },
+      issuelinks,
+      assignee,
+      statuscategorychangedate,
       comment: {
-        1: { comments }
-      }
-    }
-  } = issueData;
+       comments
+      },
+      [sprintCustomFieldKey]: sprintCustomField 
+  } = transformedIssueData;
 
   const [linkedIssues] = useState(generateLinkedIssuesData(issuelinks));
 
@@ -117,7 +118,7 @@ const App = () => {
       </Text>
       {
         isIssueHealthy
-            ? <Text content="Healthy and on track"/>
+            ? <Text>Healthy and on track</Text>
             : <Text>
                 <Strong>Unhealthy: </Strong>{numberOfUnhealthyParams}/3 health issues
               </Text>
@@ -140,10 +141,10 @@ const App = () => {
         <Table>
           <Head>
             <Cell>
-              <Text content="Sprint name" />
+              <Text>Sprint name</Text>
             </Cell>
             <Cell>
-              <Text content="Start date" />
+              <Text>Start date</Text>
             </Cell>
           </Head>
           {oldSprints.map(oldSprint => (
@@ -154,7 +155,7 @@ const App = () => {
                 </Text>
               </Cell>
               <Cell>
-                <Text content={oldSprint.startDate} />
+                <Text>{oldSprint.startDate}</Text>
               </Cell>
             </Row>
           ))}
@@ -175,13 +176,13 @@ const App = () => {
         <Table>
           <Head>
             <Cell>
-              <Text content="Issue key" />
+              <Text>Issue key</Text>
             </Cell>
             <Cell>
-              <Text content="Status" />
+              <Text>Status</Text>
             </Cell>
             <Cell>
-              <Text content="Owner" />
+              <Text>Owner</Text>
             </Cell>
           </Head>
           {linkedIssues.map(
@@ -214,9 +215,9 @@ const App = () => {
                 </Cell>
                 <Cell>
                   {linkedAssignee && (
-                    <AvatarStack>
-                      <Avatar accountId={linkedAssignee.accountId} />
-                    </AvatarStack>
+                    <UserGroup>
+                      <User accountId={linkedAssignee.accountId} />
+                    </UserGroup>
                   )}
                 </Cell>
               </Row>
@@ -239,29 +240,29 @@ const App = () => {
       <Table>
         <Head>
           <Cell>
-            <Text content="Activity" />
+            <Text>Activity</Text>
           </Cell>
           <Cell>
-            <Text content="Last change" />
+            <Text>Last change</Text>
           </Cell>
         </Head>
         {comments.length > 0 && (
           <Row>
             <Cell>
-              <Text content="Comment" />
+              <Text>Comment</Text>
             </Cell>
             <Cell>
-              <Text content={format(new Date(lastCommentUpdateDate), storageData.timeConfig)} />
+              <Text>{format(new Date(lastCommentUpdateDate), storageData.timeConfig)}</Text>
             </Cell>
           </Row>
         )}
         <Row>
           <Cell>
-            <Text content="Status change" />
+            <Text>Status change</Text>
           </Cell>
           <Cell>
             {statuscategorychangedate && (
-              <Text content={format(new Date(statuscategorychangedate), storageData.timeConfig)} />
+              <Text>{format(new Date(statuscategorychangedate), storageData.timeConfig)}</Text>
             )}
           </Cell>
         </Row>
@@ -279,7 +280,7 @@ const App = () => {
       </Head>
       <Row>
         <Cell>
-          <Avatar accountId={assignee.accountId} />
+          <User accountId={assignee.accountId} />
         </Cell>
         { storageData && storageData.isNotifyAssigneeButtonVisible && (
           <Cell>
@@ -322,12 +323,12 @@ const App = () => {
               <Cell>
                 {
                   tmpToAccountId
-                      ? <Avatar accountId={tmpToAccountId}/>
-                      : <Text content="Unassinged issue" />
+                      ? <User accountId={tmpToAccountId}/>
+                      : <Text>Unassigned issue</Text>
                 }
               </Cell>
               <Cell>
-                <Text content={format(new Date(created), storageData.timeConfig)} />
+                <Text>{format(new Date(created), storageData.timeConfig)}</Text>
               </Cell>
             </Row>
         ))

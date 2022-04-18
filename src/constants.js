@@ -16,3 +16,5 @@ export const DEFAULT_CONFIGURATION = {
     isNotifyAssigneeButtonVisible: true,
     isHistoricalAssigneeVisible: false,
 };
+
+export const REQUIRED_ISSUE_FIELDS = ['statuscategorychangedate', 'customfield_10020', 'comment', 'issuelinks', 'assignee']; 
